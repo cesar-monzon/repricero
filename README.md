@@ -1,4 +1,4 @@
-# repricero
+# Repricero
 
-Repricero is a high speed Amazon repricing solution
+Repricero is a high speed solution for inventory repricing and fulfillment!
 
