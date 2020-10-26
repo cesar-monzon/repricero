@@ -1,4 +1,6 @@
+import calendar
 import re
+import time
 
 
 def price_outlier_check(prices, pct_diff = 10):
@@ -58,4 +60,32 @@ def filter_competitors(response, **pref):
     if len(competitors) < comp_needed: competitors = []
 
     return competitors
+
+
+def get_report_id(connection, report_type):
+    """ Returns most recent report creation time and id
+        Args:
+            connection: mws connection object
+            report_type: report type string
+        Returns:
+            list of unix epoch and report id
+    """
+    reports = connection.get_report_list(ReportProcessingStatusList = '_DONE_',
+                                        ReportTypeList = [report_type],
+                                        MaxCount = '30')
+
+    if reports:
+        
+        try:
+            report = [
+                reports.GetReportListResult.ReportInfo[0].AvailableDate,
+                reports.GetReportListResult.ReportInfo[0].ReportId
+                ]
+        except KeyError:
+            return []
+
+        date = time.strptime(report[:-6] + 'Z', '%Y-%m-%dT%H:%M:%SZ')
+        report[0] = int(calendar.timegm(date)
+
+    return report
 
